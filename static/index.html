@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Price Prediction</h1>
+        
+        <form action="/predict" method="POST">
+            <label for="stock_symbol">Enter Stock Symbol (e.g., AAPL, TSLA):</label>
+            <input type="text" id="stock_symbol" name="stock_symbol" required>
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction %}
+        <h2>Predicted Price for {{ stock_symbol }} on {{ prediction_date }}:</h2>
+        <h3>${{ prediction }}</h3>
+        {% endif %}
+    </div>
+</body>
+</html>
+

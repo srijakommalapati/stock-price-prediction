@@ -1,0 +1,2 @@
+# Save the trained model
+model.save('stock_model.h5')

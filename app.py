@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import load_model
+
 import datetime
 
 app = Flask(__name__)
@@ -47,18 +47,21 @@ def predict():
     if request.method == 'POST':
         stock_symbol = request.form['stock_symbol']
         
-        # Prepare the data
-        X, Y, scaler = prepare_data(stock_symbol)
+        try:
+            # Prepare the data
+            X, Y, scaler = prepare_data(stock_symbol)
 
-        # Predict the stock price for the last day in the dataset
-        prediction = model.predict(X[-1].reshape(1, 60, 1))  # Predict the next day's price
-        prediction = scaler.inverse_transform(prediction.reshape(-1, 1))  # Convert back to original scale
+            # Predict the stock price for the last day in the dataset
+            prediction = model.predict(X[-1].reshape(1, 60, 1))  # Predict the next day's price
+            prediction = scaler.inverse_transform(prediction.reshape(-1, 1))  # Convert back to original scale
 
-        # Get the date of the prediction
-        prediction_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+            # Get the date of the prediction
+            prediction_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
 
-        return render_template('index.html', prediction=prediction[0][0], prediction_date=prediction_date)
+            return render_template('index.html', prediction=prediction[0][0], prediction_date=prediction_date)
+        
+        except Exception as e:
+            return render_template('index.html', error_message=str(e))
 
 if __name__ == "__main__":
     app.run(debug=True)
-
